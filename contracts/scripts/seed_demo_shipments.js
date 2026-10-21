@@ -174,7 +174,7 @@ async function main() {
     // 4. Start Transit (Transporter -> InTransit)
     const transitTx = await trackingManager
       .connect(transporter)
-      .startTransit(shipmentId, demo.dispatchLocation, demo.dispatchNote);
+      .startTransit(shipmentId, demo.dispatchLocation);
     await transitTx.wait();
     console.log(`  -> Transit started: Status transitioned to InTransit (Code 2)`);
 
