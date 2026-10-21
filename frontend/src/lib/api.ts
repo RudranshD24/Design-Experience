@@ -410,5 +410,23 @@ export const api = {
       body: JSON.stringify(payload),
     });
   },
+
+  // Phase 1 Design Experience: Disruption Simulation & Dynamic Rerouting
+  async simulateDisruption(payload: {
+    shipment_id: number;
+    current_node?: string;
+    destination?: string;
+    disrupted_node: string;
+    severity: number;
+  }) {
+    return apiFetch<any>("/disruption/simulate", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async getDisruptionHistory(limit: number = 20) {
+    return apiFetch<any[]>(`/disruption/history?limit=${limit}`);
+  },
 };
 

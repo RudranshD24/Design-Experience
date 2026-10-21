@@ -18,6 +18,7 @@ import {
   Layers,
   Radio,
   Network,
+  Route,
 } from "lucide-react";
 
 export function Navbar() {
@@ -45,6 +46,7 @@ export function Navbar() {
     { href: "/dashboard", label: "Dashboard", icon: Layers, show: isAuthenticated },
     { href: "/shipments", label: "Shipments", icon: Truck, show: isAuthenticated },
     { href: "/shipments/new", label: "New Shipment", icon: PlusCircle, show: isShipper || isAdmin },
+    { href: "/disruption", label: "Disruption", icon: Route, show: isAdmin },
     { href: "/disputes", label: "Disputes", icon: AlertTriangle, show: isAuthenticated },
     { href: "/oracle", label: "Oracle", icon: Radio, show: isAdmin },
     { href: "/participants", label: "Participants", icon: Users, show: isAdmin },

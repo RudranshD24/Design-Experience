@@ -116,6 +116,9 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="text-xs text-slate-500 font-mono mt-0.5">{account}</p>
+            <span className="inline-block mt-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-900/50">
+              Phase 1 of the Smart Supply Chain Resilience Platform
+            </span>
           </div>
         </div>
 
