@@ -12,8 +12,10 @@ w3 = Web3(Web3.HTTPProvider(settings.rpc_url, request_kwargs={"timeout": 0.5}))
 
 def get_deployment_metadata() -> Dict[str, Any]:
     """Load deployment metadata from deployments/local.json."""
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     possible_paths = [
         settings.deployment_file,
+        os.path.join(repo_root, "deployments", "local.json"),
         os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "deployments", "local.json"),
         os.path.abspath("deployments/local.json"),
     ]
@@ -26,7 +28,9 @@ def get_deployment_metadata() -> Dict[str, Any]:
 
 def get_contract_abi(contract_name: str) -> Optional[list]:
     """Load ABI for a given contract from contracts/abi/."""
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     possible_paths = [
+        os.path.join(repo_root, "contracts", "abi", f"{contract_name}.json"),
         os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "contracts", "abi", f"{contract_name}.json"),
         os.path.abspath(f"contracts/abi/{contract_name}.json"),
     ]
