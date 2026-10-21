@@ -45,33 +45,29 @@ export function Navbar() {
     switchNetwork,
   } = useWallet();
 
-  const isShipper = role === 2;
-  const isAdmin = role === 1;
-  const isInspector = role === 5;
-
-  // Primary operational workflows
-  const primaryLinks = [
-    { href: "/dashboard", label: "Overview", icon: Layers, show: isAuthenticated },
-    { href: "/shipments", label: "Consignments", icon: Truck, show: isAuthenticated },
-    { href: "/shipments/new", label: "Dispatch", icon: PlusCircle, show: isShipper || isAdmin },
-    { href: "/disruption", label: "Disruption Engine", icon: Route, show: isAdmin },
-    { href: "/disputes", label: "Disputes", icon: AlertTriangle, show: isAuthenticated },
+  // All 10 navigation destinations are preserved and available
+  // Primary operational links (always displayed in the horizontal bar on desktop)
+  const coreLinks = [
+    { href: "/dashboard", label: "Overview", icon: Layers },
+    { href: "/shipments", label: "Consignments", icon: Truck },
+    { href: "/shipments/new", label: "Dispatch", icon: PlusCircle },
+    { href: "/disruption", label: "Disruption Engine", icon: Route },
+    { href: "/disputes", label: "Disputes", icon: AlertTriangle },
+    { href: "/consensus", label: "Consensus Lab", icon: Network },
   ];
 
-  // Secondary or administrative modules
-  const secondaryLinks = [
-    { href: "/oracle", label: "Oracle Feed", icon: Radio, show: isAdmin },
-    { href: "/participants", label: "RBAC Registry", icon: Users, show: isAdmin },
-    { href: "/audit", label: "Ledger Audit", icon: History, show: isAdmin || isInspector },
-    { href: "/analytics", label: "Telemetry", icon: BarChart3, show: isAuthenticated },
-    { href: "/consensus", label: "Consensus Lab", icon: Network, show: true },
+  // Analytical and governance modules (grouped cleanly under "More" on standard desktop)
+  const moreModules = [
+    { href: "/analytics", label: "Telemetry", icon: BarChart3, desc: "System latency & ML ETA tracking" },
+    { href: "/audit", label: "Ledger Audit", icon: History, desc: "Immutable event logs & state proof" },
+    { href: "/oracle", label: "Oracle Feed", icon: Radio, desc: "GPS coordinates & geofence events" },
+    { href: "/participants", label: "RBAC Registry", icon: Users, desc: "On-chain roles & participant directory" },
   ];
 
-  const allVisibleLinks = [...primaryLinks, ...secondaryLinks].filter((l) => l.show);
-  const visiblePrimary = primaryLinks.filter((l) => l.show);
-  const visibleSecondary = secondaryLinks.filter((l) => l.show);
+  const allNavLinks = [...coreLinks, ...moreModules];
 
-  const isSecondaryActive = visibleSecondary.some(
+  // Determine if active route is inside the "More" dropdown
+  const isMoreActive = moreModules.some(
     (link) => pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href))
   );
 
@@ -141,9 +137,9 @@ export function Navbar() {
         {/* ========================================================= */}
         {/* CENTER REGION: Primary Desktop Navigation                 */}
         {/* ========================================================= */}
-        {/* Wide Desktop View (2XL screens: all links in a single row) */}
-        <nav className="hidden 2xl:flex items-center gap-1 flex-1 justify-center max-w-4xl px-2">
-          {allVisibleLinks.map((link) => {
+        <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center px-2">
+          {/* Core Navigation Items */}
+          {coreLinks.map((link) => {
             const Icon = link.icon;
             const isActive =
               pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
@@ -154,84 +150,66 @@ export function Navbar() {
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono transition-colors rounded-sm whitespace-nowrap ${
                   isActive
                     ? "bg-slate-800 text-white font-semibold border-b-2 border-sky-400"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/60"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span>{link.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Standard Desktop / Laptop View (LG to 2XL screens: Core links + "More" dropdown) */}
-        <nav className="hidden lg:flex 2xl:hidden items-center gap-1 flex-1 justify-center px-2">
-          {visiblePrimary.map((link) => {
-            const Icon = link.icon;
-            const isActive =
-              pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono transition-colors rounded-sm whitespace-nowrap ${
-                  isActive
-                    ? "bg-slate-800 text-white font-semibold border-b-2 border-sky-400"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
+                <Icon className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                 <span>{link.label}</span>
               </Link>
             );
           })}
 
-          {visibleSecondary.length > 0 && (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-                aria-expanded={moreDropdownOpen}
-                aria-label="More navigation modules"
-                className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono transition-colors rounded-sm whitespace-nowrap ${
-                  isSecondaryActive || moreDropdownOpen
-                    ? "bg-slate-800 text-white font-semibold border-b-2 border-sky-400"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+          {/* More Modules Dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+              aria-expanded={moreDropdownOpen}
+              aria-label="More navigation modules"
+              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-mono transition-colors rounded-sm whitespace-nowrap ${
+                isMoreActive || moreDropdownOpen
+                  ? "bg-slate-800 text-white font-semibold border-b-2 border-sky-400"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+              }`}
+            >
+              <span>More</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-150 ${
+                  moreDropdownOpen ? "rotate-180 text-sky-400" : "text-slate-400"
                 }`}
-              >
-                <span>More</span>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-150 ${
-                    moreDropdownOpen ? "rotate-180 text-sky-400" : ""
-                  }`}
-                />
-              </button>
+              />
+            </button>
 
-              {moreDropdownOpen && (
-                <div className="absolute left-0 mt-1.5 w-52 bg-slate-900 border border-slate-800 rounded-sm shadow-xl py-1 z-50">
-                  {visibleSecondary.map((link) => {
-                    const Icon = link.icon;
-                    const isActive =
-                      pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMoreDropdownOpen(false)}
-                        className={`flex items-center gap-2 px-3 py-2 text-xs font-mono transition-colors ${
-                          isActive
-                            ? "bg-slate-800/90 text-sky-400 font-semibold border-l-2 border-sky-400"
-                            : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                        }`}
-                      >
-                        <Icon className="w-3.5 h-3.5 shrink-0" />
-                        <span className="whitespace-nowrap">{link.label}</span>
-                      </Link>
-                    );
-                  })}
+            {moreDropdownOpen && (
+              <div className="absolute left-0 mt-1.5 w-60 bg-slate-900 border border-slate-800 rounded-sm shadow-2xl py-1 z-50">
+                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold border-b border-slate-800/80">
+                  Analytics &amp; Governance
                 </div>
-              )}
-            </div>
-          )}
+                {moreModules.map((link) => {
+                  const Icon = link.icon;
+                  const isActive =
+                    pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMoreDropdownOpen(false)}
+                      className={`flex flex-col px-3 py-2 text-xs font-mono transition-colors ${
+                        isActive
+                          ? "bg-slate-800/90 text-sky-400 font-semibold border-l-2 border-sky-400"
+                          : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                        <span className="whitespace-nowrap font-medium">{link.label}</span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 pl-5.5">{link.desc}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* ========================================================= */}
@@ -354,7 +332,7 @@ export function Navbar() {
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-2 py-1 font-semibold">
               Mission Control Navigation
             </span>
-            {allVisibleLinks.map((link) => {
+            {allNavLinks.map((link) => {
               const Icon = link.icon;
               const isActive =
                 pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
