@@ -13,10 +13,10 @@ from typing import Dict, Any, List, Optional
 from web3 import Web3
 from eth_account import Account
 
-# Default to deterministic test key for local academic demo
+# Default to deterministic test key for local academic demo (Account 6 = Role.Oracle)
 ORACLE_DEFAULT_KEY = os.environ.get(
     "ORACLE_PRIVATE_KEY",
-    "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+    "0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e"
 )
 ORACLE_DEFAULT_ADDRESS = Account.from_key(ORACLE_DEFAULT_KEY).address
 
