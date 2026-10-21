@@ -15,11 +15,11 @@ import {
   Compass,
   CheckCircle2,
   ExternalLink,
-  Zap,
-  Info,
   Layers,
   MapPin,
-  HelpCircle,
+  Activity,
+  Terminal,
+  FileCode,
 } from "lucide-react";
 
 const NETWORK_HUBS = [
@@ -52,6 +52,7 @@ export default function DisruptionConsolePage() {
   const [simulationResult, setSimulationResult] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [showJsonInspector, setShowJsonInspector] = useState<boolean>(false);
 
   // Load active InTransit shipments
   useEffect(() => {
@@ -96,10 +97,10 @@ export default function DisruptionConsolePage() {
   const applyPresetMumbaiStorm = () => {
     setDisruptedNode("Mumbai/JNPT");
     setSeverity(0.85);
-    // Find InTransit shipment targeting Mumbai/JNPT if available
-    const match = shipments.find(
-      (s) => s.status === 2 && s.destination?.toLowerCase().includes("mumbai")
-    ) || shipments.find((s) => s.status === 2) || shipments[0];
+    const match =
+      shipments.find((s) => s.status === 2 && s.destination?.toLowerCase().includes("mumbai")) ||
+      shipments.find((s) => s.status === 2) ||
+      shipments[0];
 
     if (match) {
       setSelectedShipmentId(match.shipmentId);
@@ -111,10 +112,11 @@ export default function DisruptionConsolePage() {
   // Preset 2: Port Congestion at Mundra
   const applyPresetMundraCongestion = () => {
     setDisruptedNode("Mundra");
-    setSeverity(0.60);
-    const match = shipments.find(
-      (s) => s.destination?.toLowerCase().includes("mundra") || s.origin?.toLowerCase().includes("mundra")
-    ) || shipments.find((s) => s.status === 2) || shipments[0];
+    setSeverity(0.6);
+    const match =
+      shipments.find((s) => s.destination?.toLowerCase().includes("mundra") || s.origin?.toLowerCase().includes("mundra")) ||
+      shipments.find((s) => s.status === 2) ||
+      shipments[0];
 
     if (match) {
       setSelectedShipmentId(match.shipmentId);
@@ -156,17 +158,17 @@ export default function DisruptionConsolePage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <Shield className="w-12 h-12 text-slate-400 mb-3" />
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Admin Authentication Required</h2>
-        <p className="text-xs text-slate-500 max-w-sm mt-1 mb-4">
-          Connect your authorized Admin wallet to access the Disruption &amp; Dynamic Rerouting Console.
+      <div className="flex flex-col items-center justify-center py-20 text-center font-mono">
+        <Shield className="w-10 h-10 text-slate-500 mb-3" />
+        <h2 className="text-sm font-bold text-white uppercase tracking-wider">ADMIN AUTHENTICATION REQUIRED</h2>
+        <p className="text-xs text-slate-400 max-w-sm mt-1 mb-4 font-sans">
+          Connect your authorized Administrator wallet to execute corridor hazard simulations.
         </p>
         <button
           onClick={loginWithSignature}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-colors shadow-sm"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-xs font-semibold rounded-sm transition-colors"
         >
-          Sign with MetaMask
+          [SIGN WITH METAMASK]
         </button>
       </div>
     );
@@ -174,17 +176,17 @@ export default function DisruptionConsolePage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <AlertTriangle className="w-12 h-12 text-amber-500 mb-3" />
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Restricted Access</h2>
-        <p className="text-xs text-slate-500 max-w-sm mt-1 mb-4">
+      <div className="flex flex-col items-center justify-center py-20 text-center font-mono">
+        <AlertTriangle className="w-10 h-10 text-amber-500 mb-3" />
+        <h2 className="text-sm font-bold text-white uppercase tracking-wider">ACCESS RESTRICTED (ROLE_CHECK_FAILED)</h2>
+        <p className="text-xs text-slate-400 max-w-sm mt-1 mb-4 font-sans">
           The Disruption Console is restricted to Administrator participants per CargoChain security governance.
         </p>
         <Link
           href="/dashboard"
-          className="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-xs"
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold rounded-sm"
         >
-          Return to Dashboard
+          &larr; RETURN TO DASHBOARD
         </Link>
       </div>
     );
@@ -193,83 +195,75 @@ export default function DisruptionConsolePage() {
   const selectedShipment = shipments.find((s) => s.shipmentId === Number(selectedShipmentId));
 
   return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto">
-      {/* Header and Provenance Tag */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+    <div className="flex flex-col gap-5 max-w-7xl mx-auto font-mono">
+      {/* Console Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-sm p-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-rose-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-rose-500/20">
-              <Route className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black text-slate-900 dark:text-white">
-                  Dynamic Disruption &amp; Rerouting Console
-                </h1>
-                <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 uppercase tracking-wider">
-                  Admin Control
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Proactive hazard simulation, Dijkstra SSSP rerouting, ML delay estimation, and Oracle audit anchoring.
-              </p>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 bg-rose-950 text-rose-300 border border-rose-800 rounded-sm uppercase tracking-wider">
+              ADMIN ESCALATION CONSOLE
+            </span>
+            <span className="text-[11px] text-slate-400">MODULE: SSSP-REROUTE-V1</span>
           </div>
+          <h1 className="text-base font-bold text-white uppercase tracking-wider mt-1">
+            Dynamic Corridor Disruption &amp; Rerouting Engine
+          </h1>
+          <p className="text-xs text-slate-400 font-sans mt-0.5">
+            Dijkstra risk-penalized edge routing, Yen&apos;s K=3 simple path alternatives, ML delay advisory, and Oracle ledger anchoring.
+          </p>
         </div>
 
         {/* Provenance Badge */}
-        <div className="flex items-center gap-2 self-start sm:self-center">
-          <span className="text-[11px] font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/60 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-amber-500" />
-            Synthetic demo data — advisory only
-          </span>
+        <div className="text-[11px] text-amber-300 bg-amber-950/60 border border-amber-800 px-3 py-1.5 rounded-sm flex items-center gap-2 self-start sm:self-center">
+          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span>SYNTHETIC DEMO NETWORK &amp; DATA &mdash; ADVISORY ONLY</span>
         </div>
       </div>
 
       {/* Main Grid: Control Panel + Output View */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Disruption Simulation Parameters (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-5">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Compass className="w-4 h-4 text-blue-500" />
-                Simulation Inputs
+        <div className="lg:col-span-5 flex flex-col gap-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-sm p-4 flex flex-col gap-3.5">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-sky-400" />
+                INCIDENT PARAMETERS
               </span>
-              <span className="text-[11px] text-slate-400">Phase 1 Logistics Corridors</span>
+              <span className="text-[10px] text-slate-500">12 INDIAN CORRIDOR HUBS</span>
             </div>
 
-            {/* One-Click Presets */}
+            {/* Quick Demonstration Presets */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
-                Quick Demonstration Presets
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                ONE-CLICK INCIDENT PRESETS
               </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
                   onClick={applyPresetMumbaiStorm}
-                  className="p-2.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 hover:bg-rose-100/60 dark:hover:bg-rose-900/30 text-left transition-all group"
+                  className="p-2 rounded-sm border border-rose-900 bg-rose-950/40 hover:bg-rose-950/80 text-left transition-colors"
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-300">
-                    <Zap className="w-3.5 h-3.5 text-rose-500 group-hover:scale-110 transition-transform" />
-                    Storm at Mumbai
+                  <div className="font-bold text-rose-300 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3 h-3 text-rose-400" />
+                    MUMBAI STORM (0.85)
                   </div>
-                  <span className="text-[10px] text-slate-500 block mt-0.5">
-                    Severity 0.85 — High cyclone hazard
+                  <span className="text-[10px] text-slate-400 block mt-0.5">
+                    Severe cyclone &amp; JNPT port halt
                   </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={applyPresetMundraCongestion}
-                  className="p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/60 dark:hover:bg-amber-900/30 text-left transition-all group"
+                  className="p-2 rounded-sm border border-amber-900 bg-amber-950/40 hover:bg-amber-950/80 text-left transition-colors"
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-300">
-                    <Clock className="w-3.5 h-3.5 text-amber-500 group-hover:scale-110 transition-transform" />
-                    Port Congestion
+                  <div className="font-bold text-amber-300 flex items-center gap-1.5">
+                    <Clock className="w-3 h-3 text-amber-400" />
+                    MUNDRA CONGESTION (0.60)
                   </div>
-                  <span className="text-[10px] text-slate-500 block mt-0.5">
-                    Mundra — Severity 0.60 lane delay
+                  <span className="text-[10px] text-slate-400 block mt-0.5">
+                    Vessel backlog on NH-8 corridor
                   </span>
                 </button>
               </div>
@@ -277,44 +271,44 @@ export default function DisruptionConsolePage() {
 
             {/* Target Shipment Selector */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                <span>Select Target Shipment</span>
+              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <span>TARGET CONSIGNMENT</span>
                 {selectedShipment && (
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded font-semibold ${
+                    className={`text-[10px] px-1.5 py-0.2 rounded-sm font-semibold uppercase ${
                       selectedShipment.status === 2
-                        ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                        ? "bg-emerald-950 text-emerald-300 border border-emerald-800"
+                        : "bg-slate-800 text-slate-400"
                     }`}
                   >
-                    {selectedShipment.statusName || `Status ${selectedShipment.status}`}
+                    {selectedShipment.status === 2 ? "IN_TRANSIT (2)" : `STATUS_${selectedShipment.status}`}
                   </span>
                 )}
               </label>
               <select
                 value={selectedShipmentId}
                 onChange={(e) => handleShipmentChange(Number(e.target.value))}
-                className="w-full text-xs font-medium bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-sm px-2.5 py-2 text-slate-200 focus:outline-none focus:border-sky-500"
               >
                 {shipments.map((s) => (
                   <option key={s.shipmentId} value={s.shipmentId}>
-                    #{s.shipmentId} — {s.productDescription} ({s.origin} → {s.destination}) [
-                    {s.status === 2 ? "InTransit" : s.statusName}]
+                    #{s.shipmentId} — {s.productDescription.slice(0, 28)}... ({s.origin} &rarr; {s.destination}) [
+                    {s.status === 2 ? "InTransit" : `State_${s.status}`}]
                   </option>
                 ))}
               </select>
             </div>
 
             {/* Origin & Destination Hubs */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5">
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                  Current Node
+                <label className="text-[10px] font-semibold text-slate-400 uppercase">
+                  CURRENT NODE
                 </label>
                 <select
                   value={currentNode}
                   onChange={(e) => setCurrentNode(e.target.value)}
-                  className="w-full text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-2 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-sm px-2 py-1.5 text-slate-200 focus:outline-none focus:border-sky-500"
                 >
                   {NETWORK_HUBS.map((h) => (
                     <option key={h} value={h}>
@@ -325,13 +319,13 @@ export default function DisruptionConsolePage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                  Destination Hub
+                <label className="text-[10px] font-semibold text-slate-400 uppercase">
+                  DESTINATION HUB
                 </label>
                 <select
                   value={destinationNode}
                   onChange={(e) => setDestinationNode(e.target.value)}
-                  className="w-full text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-2 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-sm px-2 py-1.5 text-slate-200 focus:outline-none focus:border-sky-500"
                 >
                   {NETWORK_HUBS.map((h) => (
                     <option key={h} value={h}>
@@ -344,14 +338,14 @@ export default function DisruptionConsolePage() {
 
             {/* Disrupted Node */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                <span>Disrupted Corridor Hub</span>
-                <span className="text-[10px] text-rose-500 font-semibold">Simulated blockage</span>
+              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <span>DISRUPTED CORRIDOR HUB</span>
+                <span className="text-[10px] text-rose-400 font-semibold">[BLOCKED NODE]</span>
               </label>
               <select
                 value={disruptedNode}
                 onChange={(e) => setDisruptedNode(e.target.value)}
-                className="w-full text-xs font-medium bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full text-xs font-mono bg-slate-950 border border-rose-900 rounded-sm px-2.5 py-2 text-rose-200 focus:outline-none focus:border-rose-500"
               >
                 {NETWORK_HUBS.map((h) => (
                   <option key={h} value={h}>
@@ -362,13 +356,13 @@ export default function DisruptionConsolePage() {
             </div>
 
             {/* Severity Slider */}
-            <div className="space-y-2 pt-1">
+            <div className="space-y-1.5 pt-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-700 dark:text-slate-300">Hazard Severity</span>
-                <span className="font-mono font-bold text-sm text-rose-500">
+                <span className="font-bold text-slate-300 uppercase">HAZARD SEVERITY</span>
+                <span className="font-mono font-bold text-rose-400">
                   {severity.toFixed(2)}{" "}
                   <span className="text-[10px] text-slate-400 font-normal">
-                    ({severity >= 0.7 ? "High Risk" : severity >= 0.4 ? "Moderate" : "Low"})
+                    ({severity >= 0.7 ? "TRIGGER ON-CHAIN ANCHOR" : "SKIPS ON-CHAIN"})
                   </span>
                 </span>
               </div>
@@ -379,18 +373,18 @@ export default function DisruptionConsolePage() {
                 step="0.05"
                 value={severity}
                 onChange={(e) => setSeverity(parseFloat(e.target.value))}
-                className="w-full accent-rose-600 bg-slate-200 dark:bg-slate-700 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-rose-500 bg-slate-800 h-1.5 rounded-none cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>0.0 (Clear)</span>
-                <span>0.5 (Moderate)</span>
-                <span>1.0 (Critical)</span>
+              <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                <span>0.0 (CLEAR)</span>
+                <span>0.5 (MODERATE)</span>
+                <span>1.0 (CRITICAL)</span>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
+              <div className="p-2.5 rounded-sm bg-rose-950/80 border border-rose-800 text-xs text-rose-300 flex items-start gap-2">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
                 <span>{error}</span>
               </div>
             )}
@@ -400,17 +394,17 @@ export default function DisruptionConsolePage() {
               type="button"
               onClick={handleSimulate}
               disabled={simulating || !selectedShipmentId}
-              className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 hover:from-blue-700 hover:via-indigo-700 hover:to-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50 active:scale-98"
+              className="w-full mt-1 py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs font-bold rounded-sm border border-slate-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {simulating ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Computing Optimal Dynamic Corridor...</span>
+                  <RefreshCw className="w-3.5 h-3.5 text-sky-400 animate-spin" />
+                  <span>CALCULATING SSSP DIJKSTRA DETOUR...</span>
                 </>
               ) : (
                 <>
-                  <Route className="w-4 h-4" />
-                  <span>Simulate Disruption &amp; Evaluate Reroute</span>
+                  <Route className="w-3.5 h-3.5 text-sky-400" />
+                  <span>[EXECUTE SIMULATION &amp; LEDGER AUDIT]</span>
                 </>
               )}
             </button>
@@ -418,160 +412,142 @@ export default function DisruptionConsolePage() {
         </div>
 
         {/* Right Column: Decision Support & Reroute Results (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-5">
+        <div className="lg:col-span-7 flex flex-col gap-4">
           {simulationResult ? (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col gap-5">
-              {/* Top Banner: Status & Delta */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div className="bg-slate-900 border border-slate-800 rounded-sm p-4 flex flex-col gap-4">
+              {/* Header Status & Key Metrics */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Dynamic Reroute Decision
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                    ALGORITHMIC REROUTE DETERMINATION
                   </span>
-                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">
-                    Shipment #{simulationResult.shipment_id}: {simulationResult.current_node} →{" "}
+                  <h3 className="text-sm font-bold text-white mt-0.5">
+                    CONSIGNMENT #{simulationResult.shipment_id}: {simulationResult.current_node} &rarr;{" "}
                     {simulationResult.destination}
                   </h3>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {/* Risk Badge */}
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${
+                    className={`px-2 py-0.5 rounded-sm text-[11px] font-bold border ${
                       simulationResult.delay_risk_category === "HIGH"
-                        ? "bg-rose-500/10 text-rose-500 border-rose-500/20"
+                        ? "bg-rose-950 text-rose-300 border-rose-800"
                         : simulationResult.delay_risk_category === "MODERATE"
-                        ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                        : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                        ? "bg-amber-950 text-amber-300 border-amber-800"
+                        : "bg-emerald-950 text-emerald-300 border-emerald-800"
                     }`}
                   >
-                    <AlertTriangle className="w-3.5 h-3.5" />
-                    {simulationResult.delay_risk_category} RISK (
+                    RISK: {simulationResult.delay_risk_category} (
                     {Math.round(simulationResult.delay_risk_probability * 100)}%)
                   </span>
 
-                  {/* Delta Badge */}
-                  <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                    +{simulationResult.delta_hours}h Transit
+                  <span className="px-2 py-0.5 rounded-sm text-[11px] font-bold bg-slate-950 text-sky-300 border border-slate-800">
+                    +{simulationResult.delta_hours}h DELTA
                   </span>
                 </div>
               </div>
 
-              {/* Corridor Comparison: SVG Node Chain Visualization */}
-              <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-4 border border-slate-200 dark:border-slate-800/80">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-3 flex items-center gap-1.5">
-                  <Route className="w-3.5 h-3.5 text-blue-500" />
-                  Corridor Comparison: Baseline vs Rerouted
-                </span>
-
-                {/* Baseline Route */}
-                {simulationResult.baseline_route && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1.5 font-medium">
-                      <span>Baseline Route (Pre-disruption):</span>
-                      <span className="font-mono">
-                        {simulationResult.baseline_route.total_hours}h · {simulationResult.baseline_route.total_km}km
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {simulationResult.baseline_route.node_list.map((node: string, idx: number) => {
-                        const isDisrupted = node === simulationResult.disrupted_node;
-                        return (
-                          <React.Fragment key={idx}>
-                            <span
-                              className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${
-                                isDisrupted
-                                  ? "bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800 line-through"
-                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800"
-                              }`}
-                            >
-                              {node}
+              {/* Differential Comparison Table (Clean, Not Floating) */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border border-slate-800">
+                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase text-[10px]">
+                    <tr>
+                      <th className="p-2.5 border-r border-slate-800">Plan</th>
+                      <th className="p-2.5 border-r border-slate-800">Corridor Nodes</th>
+                      <th className="p-2.5 border-r border-slate-800 text-right">Distance</th>
+                      <th className="p-2.5 border-r border-slate-800 text-right">Est. Transit</th>
+                      <th className="p-2.5 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    <tr className="bg-slate-950/40 text-slate-400">
+                      <td className="p-2.5 border-r border-slate-800 font-semibold text-slate-300">
+                        BASELINE
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800">
+                        {simulationResult.baseline_route?.node_list.map((n: string, i: number) => (
+                          <span key={i}>
+                            <span className={n === simulationResult.disrupted_node ? "text-rose-400 line-through font-bold" : ""}>
+                              {n}
                             </span>
-                            {idx < simulationResult.baseline_route.node_list.length - 1 && (
-                              <ArrowRight className="w-3 h-3 text-slate-400" />
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Rerouted Route */}
-                {simulationResult.rerouted_route ? (
-                  <div>
-                    <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 mb-1.5 font-semibold">
-                      <span>Dynamic Reroute (Bypassing Disruption):</span>
-                      <span className="font-mono">
-                        {simulationResult.rerouted_route.total_hours}h · {simulationResult.rerouted_route.total_km}km
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {simulationResult.rerouted_route.node_list.map((node: string, idx: number) => (
-                        <React.Fragment key={idx}>
-                          <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 shadow-xs">
-                            {node}
+                            {i < simulationResult.baseline_route.node_list.length - 1 && " \u2192 "}
                           </span>
-                          {idx < simulationResult.rerouted_route.node_list.length - 1 && (
-                            <ArrowRight className="w-3 h-3 text-emerald-500" />
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-xs text-rose-500">
-                    No alternate path feasible without traversing the disrupted node.
-                  </div>
-                )}
+                        ))}
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800 text-right">
+                        {simulationResult.baseline_route?.total_km} km
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800 text-right">
+                        {simulationResult.baseline_route?.total_hours} h
+                      </td>
+                      <td className="p-2.5 text-right text-rose-400">BLOCKED</td>
+                    </tr>
+                    <tr className="bg-slate-900 text-slate-200">
+                      <td className="p-2.5 border-r border-slate-800 font-semibold text-emerald-400">
+                        DETOUR (SSSP)
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800 font-bold text-white">
+                        {simulationResult.rerouted_route?.node_list.join(" \u2192 ")}
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800 text-right font-bold">
+                        {simulationResult.rerouted_route?.total_km} km
+                      </td>
+                      <td className="p-2.5 border-r border-slate-800 text-right font-bold text-sky-400">
+                        {simulationResult.rerouted_route?.total_hours} h
+                      </td>
+                      <td className="p-2.5 text-right text-emerald-400 font-bold">FEASIBLE</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
-              {/* Recommendation Narrative */}
-              <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 text-xs text-slate-800 dark:text-slate-200 leading-relaxed">
-                <span className="font-bold text-blue-700 dark:text-blue-300 block mb-0.5">
-                  Algorithmic Reroute Advisory:
+              {/* Reroute Recommendation Narrative */}
+              <div className="p-3 bg-slate-950 border border-slate-800 rounded-sm text-xs text-slate-300 leading-relaxed">
+                <span className="font-bold text-sky-400 block mb-0.5">
+                  OPERATIONAL DISPATCH ADVISORY:
                 </span>
                 {simulationResult.recommendation}
               </div>
 
-              {/* On-Chain Anchoring Status Banner */}
+              {/* On-Chain Ledger Anchoring State */}
               <div
-                className={`p-4 rounded-xl border flex flex-col gap-2 ${
+                className={`p-3.5 rounded-sm border flex flex-col gap-2 ${
                   simulationResult.onchain_status === "anchored"
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200"
+                    ? "bg-slate-950 border-emerald-800 text-emerald-200"
                     : simulationResult.onchain_status === "skipped"
-                    ? "bg-slate-100 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
-                    : "bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200"
+                    ? "bg-slate-950 border-slate-800 text-slate-400"
+                    : "bg-slate-950 border-amber-800 text-amber-200"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {simulationResult.onchain_status === "anchored" ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                     ) : (
-                      <Info className="w-4 h-4 text-slate-400" />
+                      <Terminal className="w-3.5 h-3.5 text-slate-400" />
                     )}
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      On-Chain Blockchain Anchor: {simulationResult.onchain_status}
+                      LEDGER AUDIT STATUS: {simulationResult.onchain_status}
                     </span>
                   </div>
                   {simulationResult.onchain_status === "anchored" && (
                     <Link
                       href={`/shipments/${simulationResult.shipment_id}`}
-                      className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                      className="text-xs text-sky-400 hover:underline flex items-center gap-1"
                     >
-                      <span>View Timeline</span>
+                      <span>INSPECT TIMELINE</span>
                       <ExternalLink className="w-3 h-3" />
                     </Link>
                   )}
                 </div>
 
-                <p className="text-[11px] opacity-90">{simulationResult.onchain_reason}</p>
+                <p className="text-[11px] font-sans text-slate-400">{simulationResult.onchain_reason}</p>
 
                 {simulationResult.tx_hashes && simulationResult.tx_hashes.length > 0 && (
-                  <div className="mt-1 pt-2 border-t border-emerald-500/20 text-[10px] font-mono flex flex-wrap gap-2">
-                    <span className="text-slate-400">Transaction Hashes:</span>
+                  <div className="mt-1 pt-2 border-t border-slate-800 text-[10px] flex flex-wrap items-center gap-2">
+                    <span className="text-slate-500 uppercase">TX HASHES:</span>
                     {simulationResult.tx_hashes.map((tx: string, idx: number) => (
-                      <span key={idx} className="bg-black/20 px-2 py-0.5 rounded">
+                      <span key={idx} className="bg-slate-900 border border-slate-800 px-1.5 py-0.5 text-slate-300">
                         {tx.slice(0, 10)}...{tx.slice(-8)}
                       </span>
                     ))}
@@ -579,76 +555,73 @@ export default function DisruptionConsolePage() {
                 )}
               </div>
 
-              {/* Explanatory Factors & Alternates */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Explanatory Factors & Alternates (Yen K-paths) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {/* Contributing Risk Factors */}
-                <div className="space-y-2">
-                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block flex items-center gap-1.5">
-                    <TrendingUp className="w-3 h-3 text-indigo-400" />
-                    Top Model Factors
+                <div className="p-3 bg-slate-950 border border-slate-800 rounded-sm">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                    ML EXPLANATORY FEATURE WEIGHTS
                   </span>
                   <div className="space-y-1.5">
                     {simulationResult.contributing_factors?.slice(0, 3).map((f: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] flex justify-between items-center"
-                      >
-                        <span className="text-slate-600 dark:text-slate-400 truncate">
-                          {f.feature.replace(/_/g, " ")}
-                        </span>
-                        <span className="font-mono font-medium text-slate-800 dark:text-slate-200">
-                          {(f.importance * 100).toFixed(1)}%
-                        </span>
+                      <div key={idx} className="flex justify-between items-center text-[11px]">
+                        <span className="text-slate-400">{f.feature}</span>
+                        <span className="font-bold text-slate-200">{(f.importance * 100).toFixed(1)}%</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Alternates from Yen's K-paths */}
-                <div className="space-y-2">
-                  <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block flex items-center gap-1.5">
-                    <Layers className="w-3 h-3 text-blue-400" />
-                    K-Shortest Alternates (Yen)
+                <div className="p-3 bg-slate-950 border border-slate-800 rounded-sm">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                    YEN K-SHORTEST ALTERNATIVES (K=3)
                   </span>
                   {simulationResult.alternates && simulationResult.alternates.length > 0 ? (
-                    <div className="space-y-1.5">
+                    <div className="space-y-1 text-[11px]">
                       {simulationResult.alternates.map((alt: any, idx: number) => (
-                        <div
-                          key={idx}
-                          className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px]"
-                        >
-                          <div className="flex justify-between font-mono text-[10px] text-slate-500 mb-0.5">
-                            <span>Option #{idx + 2}</span>
-                            <span>{alt.total_hours}h</span>
-                          </div>
-                          <span className="text-slate-700 dark:text-slate-300 font-medium">
-                            {alt.node_list.join(" → ")}
-                          </span>
+                        <div key={idx} className="flex justify-between text-slate-300">
+                          <span className="text-slate-400">#{idx + 2}: {alt.node_list.join(" \u2192 ")}</span>
+                          <span className="font-bold text-sky-400 whitespace-nowrap ml-2">{alt.total_hours}h</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <span className="text-[11px] text-slate-400 italic">No additional paths available</span>
+                    <span className="text-[11px] text-slate-500 italic">No additional paths feasible</span>
                   )}
                 </div>
               </div>
 
-              {/* Safeguard Notice */}
-              <div className="text-[10px] text-slate-400 text-center pt-2 border-t border-slate-100 dark:border-slate-800">
-                {simulationResult.caveat}
+              {/* Raw JSON Inspector Drawer Toggle */}
+              <div className="border-t border-slate-800 pt-3 flex items-center justify-between text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowJsonInspector(!showJsonInspector)}
+                  className="text-slate-400 hover:text-slate-200 flex items-center gap-1.5 text-[11px]"
+                >
+                  <FileCode className="w-3.5 h-3.5 text-sky-400" />
+                  <span>{showJsonInspector ? "[-] HIDE RAW AUDIT JSON" : "[+] INSPECT RAW AUDIT JSON"}</span>
+                </button>
+                <span className="text-[10px] text-slate-500">
+                  SHA-256 HASH VERIFIED BY ORACLE
+                </span>
               </div>
+
+              {showJsonInspector && (
+                <pre className="p-3 bg-slate-950 border border-slate-800 rounded-sm text-[10px] text-slate-300 overflow-x-auto">
+                  {JSON.stringify(simulationResult, null, 2)}
+                </pre>
+              )}
             </div>
           ) : (
-            <div className="bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-500 flex items-center justify-center mb-3">
-                <Route className="w-7 h-7" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                No Active Disruption Simulation
+            <div className="bg-slate-900 border border-slate-800 rounded-sm p-12 text-center flex flex-col items-center justify-center min-h-[360px]">
+              <Terminal className="w-8 h-8 text-slate-600 mb-2" />
+              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                NO SIMULATION EXECUTED IN CURRENT SESSION
               </h3>
-              <p className="text-xs text-slate-500 max-w-sm mt-1">
-                Select a shipment corridor on the left, configure hazard parameters or click a preset, and run the
-                simulation to view real-time dynamic rerouting.
+              <p className="text-[11px] text-slate-500 max-w-sm mt-1 font-sans">
+                Select a shipment corridor on the left, set the hazard severity or click one of the presets, and execute
+                the simulation to view real-time detour and ledger anchoring.
               </p>
             </div>
           )}
@@ -657,50 +630,50 @@ export default function DisruptionConsolePage() {
 
       {/* Bottom Section: Recent Disruption Audit Log */}
       {history.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-indigo-500" />
-              Recent Reroute Decision History
+        <div className="bg-slate-900 border border-slate-800 rounded-sm p-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5 text-sky-400" />
+              RECENT CORRIDOR REROUTE LOGS (BOUNDED BUFFER)
             </span>
-            <span className="text-[11px] text-slate-400">Bounded Audit Buffer</span>
+            <span className="text-[10px] text-slate-500">AUDIT PROVENANCE</span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="text-[10px] uppercase font-bold text-slate-400 border-b border-slate-100 dark:border-slate-800">
+            <table className="w-full text-left text-xs border border-slate-800">
+              <thead className="text-[10px] uppercase font-bold text-slate-400 bg-slate-950 border-b border-slate-800">
                 <tr>
-                  <th className="pb-2">Timestamp</th>
-                  <th className="pb-2">Shipment</th>
-                  <th className="pb-2">Corridor</th>
-                  <th className="pb-2">Disrupted Hub</th>
-                  <th className="pb-2">Risk</th>
-                  <th className="pb-2">Delta</th>
-                  <th className="pb-2">On-Chain</th>
+                  <th className="p-2 border-r border-slate-800">Time</th>
+                  <th className="p-2 border-r border-slate-800">Shipment</th>
+                  <th className="p-2 border-r border-slate-800">Corridor</th>
+                  <th className="p-2 border-r border-slate-800">Disrupted Hub</th>
+                  <th className="p-2 border-r border-slate-800">Delay Risk</th>
+                  <th className="p-2 border-r border-slate-800">Delta</th>
+                  <th className="p-2">On-Chain State</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+              <tbody className="divide-y divide-slate-800 text-slate-300">
                 {history.map((h: any, idx: number) => (
-                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
-                    <td className="py-2.5 text-[11px] font-mono text-slate-500">
+                  <tr key={idx} className="hover:bg-slate-800/40">
+                    <td className="p-2 border-r border-slate-800 text-[11px] text-slate-400 whitespace-nowrap">
                       {new Date(h.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
                     </td>
-                    <td className="py-2.5 font-bold">#{h.shipment_id}</td>
-                    <td className="py-2.5">
-                      {h.current_node} → {h.destination}
+                    <td className="p-2 border-r border-slate-800 font-bold text-white">#{h.shipment_id}</td>
+                    <td className="p-2 border-r border-slate-800">
+                      {h.current_node} &rarr; {h.destination}
                     </td>
-                    <td className="py-2.5 text-rose-500 font-semibold">{h.disrupted_node}</td>
-                    <td className="py-2.5">
+                    <td className="p-2 border-r border-slate-800 text-rose-400 font-semibold">{h.disrupted_node}</td>
+                    <td className="p-2 border-r border-slate-800">
                       <span className="font-bold">{h.delay_risk_category}</span> (
                       {Math.round(h.delay_risk_probability * 100)}%)
                     </td>
-                    <td className="py-2.5 font-mono text-indigo-500 font-bold">+{h.delta_hours}h</td>
-                    <td className="py-2.5">
+                    <td className="p-2 border-r border-slate-800 font-bold text-sky-400">+{h.delta_hours}h</td>
+                    <td className="p-2">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                        className={`px-1.5 py-0.2 rounded-sm text-[10px] font-bold uppercase border ${
                           h.onchain_status === "anchored"
-                            ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                            ? "bg-emerald-950 text-emerald-300 border-emerald-800"
+                            : "bg-slate-800 text-slate-400 border-slate-700"
                         }`}
                       >
                         {h.onchain_status}

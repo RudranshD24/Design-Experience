@@ -10,11 +10,13 @@ import {
   FileCheck2,
   Coins,
   ArrowRight,
-  CheckCircle2,
   AlertTriangle,
   LogIn,
   Layers,
   Database,
+  Route,
+  Activity,
+  Terminal,
 } from "lucide-react";
 
 export default function Home() {
@@ -34,142 +36,281 @@ export default function Home() {
   } = useWallet();
 
   return (
-    <div className="flex flex-col gap-12 py-4">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-blue-900/20 via-indigo-950/40 to-slate-950 border border-blue-500/20 p-8 sm:p-12 shadow-2xl">
-        <div className="max-w-3xl flex flex-col gap-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30 w-fit">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
-            Blockchain Technology Academic Prototype
+    <div className="flex flex-col gap-6 py-2">
+      {/* System Telemetry & Gateway Banner */}
+      <section className="bg-slate-900 border border-slate-800 rounded-sm p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="max-w-3xl flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 bg-slate-800 text-sky-400 border border-slate-700 rounded-sm">
+                SYSTEM OPERATIONAL
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">
+                CHAIN ID: 1337 | EVM LOCALHOST :8545
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono uppercase">
+              Smart Supply Chain Resilience Platform
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+              Decentralized logistics operations console providing multi-party custody auditing,
+              IPFS-anchored document verification, milestone-conditioned escrow, and proactive
+              incident rerouting with on-chain cryptographic provenance.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-slate-400 border-t border-slate-800 pt-3">
+              <span>PROJECT: <strong className="text-slate-200">CargoChain Phase 1</strong></span>
+              <span className="text-slate-700">|</span>
+              <span>AUTHOR: <strong className="text-slate-200">Rudransh Dubey</strong></span>
+              <span className="text-slate-700">|</span>
+              <span>AFFILIATION: <strong className="text-slate-200">B.Tech AI &amp; DS, NMIMS Indore</strong></span>
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-            Decentralized Supply Chain &amp;{" "}
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-400 bg-clip-text text-transparent">
-              Smart-Contract Logistics
-            </span>
-          </h1>
+          {/* Authentication Gateway Card */}
+          <div className="bg-slate-950 border border-slate-800 p-5 rounded-sm min-w-[300px] flex flex-col gap-3">
+            <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2">
+              <span className="text-slate-400 font-semibold uppercase">NODE ACCESS GATEWAY</span>
+              <span className="text-emerald-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> ONLINE
+              </span>
+            </div>
 
-          <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-            CargoChain replaces fragmented paperwork with multi-party on-chain custody tracking,
-            IPFS-anchored tamper-evident document verification, and milestone-conditioned test-ETH escrow.
-          </p>
-
-          {/* Quick Notice */}
-          <div className="flex items-center gap-3 p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl text-xs text-slate-400">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>
-              Configured for local demonstration on <strong>Ganache (Chain ID 1337)</strong>. All payments use simulated test-ETH.
-            </span>
-          </div>
-
-          {/* Call to action card */}
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             {!account ? (
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-blue-600/30 transition-all active:scale-98 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-sky-950 hover:bg-sky-900 text-sky-200 border border-sky-800 font-mono text-xs font-semibold px-4 py-2.5 rounded-sm transition-colors disabled:opacity-50"
               >
-                <LogIn className="w-5 h-5" />
-                {isConnecting ? "Connecting MetaMask..." : "Connect MetaMask Wallet"}
+                <LogIn className="w-3.5 h-3.5" />
+                {isConnecting ? "CONNECTING..." : "CONNECT METAMASK"}
               </button>
             ) : !isAuthenticated ? (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="flex flex-col gap-2">
+                <div className="text-[11px] font-mono text-slate-400 truncate">
+                  WALLET: <span className="text-slate-200">{displayAddress}</span>
+                </div>
                 <button
                   onClick={loginWithSignature}
                   disabled={isLoggingIn}
-                  className="flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-indigo-600/30 transition-all active:scale-98 disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-mono text-xs font-semibold px-4 py-2.5 rounded-sm transition-colors disabled:opacity-50"
                 >
-                  <Shield className="w-5 h-5" />
-                  {isLoggingIn ? "Awaiting Signature..." : `Sign to Authenticate (${displayAddress})`}
+                  <Shield className="w-3.5 h-3.5 text-sky-400" />
+                  {isLoggingIn ? "VERIFYING SIGNATURE..." : "AUTHENTICATE (EIP-191)"}
                 </button>
                 {!isCorrectNetwork && (
                   <button
                     onClick={switchNetwork}
-                    className="flex items-center justify-center gap-1.5 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-2xl text-xs font-semibold"
+                    className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 bg-amber-950/60 text-amber-300 border border-amber-800 rounded-sm text-[11px] font-mono"
                   >
-                    <AlertTriangle className="w-4 h-4" />
-                    Switch to Chain 1337
+                    <AlertTriangle className="w-3 h-3" />
+                    SWITCH TO GANACHE 1337
                   </button>
                 )}
               </div>
             ) : (
-              <Link
-                href="/dashboard"
-                className="flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all active:scale-98"
-              >
-                <Layers className="w-5 h-5" />
-                Enter Dashboard as {roleName}
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-slate-400">ACTIVE ROLE:</span>
+                  <span className="text-sky-300 font-bold uppercase">{roleName}</span>
+                </div>
+                <div className="text-[11px] font-mono text-slate-400 truncate">
+                  ACCOUNT: <span className="text-slate-300">{displayAddress}</span>
+                </div>
+                <Link
+                  href="/dashboard"
+                  className="w-full flex items-center justify-center gap-2 bg-emerald-950 hover:bg-emerald-900 text-emerald-200 border border-emerald-800 font-mono text-xs font-semibold px-4 py-2.5 rounded-sm transition-colors"
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  ENTER OPERATIONAL CONSOLE
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            )}
+
+            {authError && (
+              <div className="p-2 bg-rose-950/80 border border-rose-800 text-rose-300 rounded-sm text-[11px] font-mono">
+                ERR: {authError}
+              </div>
             )}
           </div>
+        </div>
+      </section>
 
-          {authError && (
-            <div className="p-3 bg-rose-950/50 border border-rose-800 text-rose-300 rounded-xl text-xs">
-              <strong>Authentication Error: </strong>
-              {authError}
+      {/* Protocol Architecture & Guarantee Matrix (Tabular, not 3 bento cards) */}
+      <section className="bg-slate-900 border border-slate-800 rounded-sm p-6">
+        <div className="border-b border-slate-800 pb-3 mb-4 flex items-center justify-between">
+          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5 text-sky-400" />
+            Core Architectural Enforcements &amp; Invariants
+          </h2>
+          <span className="text-[10px] font-mono text-slate-400">
+            SOLIDITY 0.8.24 + FASTAPI + POSTGRESQL + KUBO IPFS
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs font-mono border border-slate-800">
+            <thead className="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase text-[10px]">
+              <tr>
+                <th className="p-3 border-r border-slate-800">Subsystem</th>
+                <th className="p-3 border-r border-slate-800">Implementation Layer</th>
+                <th className="p-3 border-r border-slate-800">State Authority</th>
+                <th className="p-3">Deterministic Guarantees</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800 text-slate-300">
+              <tr className="hover:bg-slate-800/40">
+                <td className="p-3 border-r border-slate-800 font-semibold text-white">
+                  Custody &amp; Transitions
+                </td>
+                <td className="p-3 border-r border-slate-800 text-slate-400">
+                  TrackingManager.sol &amp; ShipmentRegistry.sol
+                </td>
+                <td className="p-3 border-r border-slate-800 text-emerald-400">
+                  Smart Contract (EVM)
+                </td>
+                <td className="p-3">
+                  10-stage sequential state machine. Illegal jumps revert on-chain.
+                </td>
+              </tr>
+              <tr className="hover:bg-slate-800/40">
+                <td className="p-3 border-r border-slate-800 font-semibold text-white">
+                  Document Integrity
+                </td>
+                <td className="p-3 border-r border-slate-800 text-slate-400">
+                  DocumentRegistry.sol + Local Kubo IPFS
+                </td>
+                <td className="p-3 border-r border-slate-800 text-emerald-400">
+                  SHA-256 Digest on Ledger
+                </td>
+                <td className="p-3">
+                  Only 32-byte cryptographic hash is on-chain; full payload stored in IPFS.
+                </td>
+              </tr>
+              <tr className="hover:bg-slate-800/40">
+                <td className="p-3 border-r border-slate-800 font-semibold text-white">
+                  Settlement &amp; Penalties
+                </td>
+                <td className="p-3 border-r border-slate-800 text-slate-400">
+                  EscrowManager.sol
+                </td>
+                <td className="p-3 border-r border-slate-800 text-emerald-400">
+                  Smart Contract Escrow
+                </td>
+                <td className="p-3">
+                  Delivery SLA delay penalties automatically computed on-chain (up to 30% cap).
+                </td>
+              </tr>
+              <tr className="hover:bg-slate-800/40">
+                <td className="p-3 border-r border-slate-800 font-semibold text-white">
+                  Disruption &amp; Detours
+                </td>
+                <td className="p-3 border-r border-slate-800 text-slate-400">
+                  FastAPI Routing Engine (Dijkstra + Yen K=3)
+                </td>
+                <td className="p-3 border-r border-slate-800 text-sky-400">
+                  ML Advisory + Oracle Audit
+                </td>
+                <td className="p-3">
+                  Risk scoring off-chain; reroute decision hashes anchored by Oracle account.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Structured Demonstration Sequence (Acts 1 to 6) */}
+      <section className="bg-slate-900 border border-slate-800 rounded-sm p-6">
+        <div className="border-b border-slate-800 pb-3 mb-4 flex items-center justify-between">
+          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <Activity className="w-3.5 h-3.5 text-sky-400" />
+            Verification Sequence &amp; Evaluation Acts
+          </h2>
+          <span className="text-[10px] font-mono text-slate-400">
+            DEMO SCRIPT REF: DOCS/DEMO_SCRIPT.MD
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 01</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">Role-Based Access Control</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Admin registers authorized participants (Shipper, Transporter, Inspector). Unauthorized attempts revert.
+              </p>
             </div>
-          )}
-        </div>
-      </section>
+            <Link href="/participants" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Inspect RBAC Registry &rarr;
+            </Link>
+          </div>
 
-      {/* Feature Pillar Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col gap-3 shadow-sm hover:border-blue-500/40 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-            <Truck className="w-6 h-6" />
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 02</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">Custody &amp; Lifecycle</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Shipper creates consignment, Transporter accepts and dispatches, milestones recorded sequentially.
+              </p>
+            </div>
+            <Link href="/shipments" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Inspect Consignments &rarr;
+            </Link>
           </div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Strict Lifecycle State Machine</h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Multi-signature custody transfers and sequential status transitions enforced directly by Solidity smart contracts.
-          </p>
-        </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col gap-3 shadow-sm hover:border-indigo-500/40 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-            <FileCheck2 className="w-6 h-6" />
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 03</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">IPFS Hashes &amp; Escrow</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Upload Bill of Lading, compute SHA-256, verify against tampering, deposit and release test-ETH.
+              </p>
+            </div>
+            <Link href="/shipments/2" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Inspect Escrow &amp; Documents &rarr;
+            </Link>
           </div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Tamper-Evident IPFS Anchoring</h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Bills of Lading and Inspection Certificates anchored on-chain by SHA-256 hash. Real-time file integrity verification prevents forgery.
-          </p>
-        </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col gap-3 shadow-sm hover:border-cyan-500/40 transition-colors">
-          <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
-            <Coins className="w-6 h-6" />
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 04</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">Ledger Audit &amp; Recovery</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Query event log, trigger idempotent database reindex to prove PostgreSQL projection is disposable.
+              </p>
+            </div>
+            <Link href="/audit" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Inspect Audit Log &rarr;
+            </Link>
           </div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Conditional Test-ETH Escrow</h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Freight payments are locked in EscrowManager and released only upon delivery confirmation, or refunded if rejected or cancelled.
-          </p>
-        </div>
-      </section>
 
-      {/* Demo Script Walkthrough Reference */}
-      <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
-          <Database className="w-4 h-4 text-blue-400" />
-          Demo Script Guided Sequence (Acts 1–4)
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-3.5 bg-slate-900/70 border border-slate-800 rounded-xl">
-            <span className="font-bold text-blue-400">Act 1: Identity &amp; Roles</span>
-            <p className="text-slate-400 mt-1">Admin registers participants and validates on-chain role enforcement.</p>
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 05</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">Dispute Tribunal &amp; Consensus</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Freeze escrow upon commercial breach; benchmark simulated PoW, PoA, and PBFT consensus metrics.
+              </p>
+            </div>
+            <Link href="/disputes" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Inspect Disputes &rarr;
+            </Link>
           </div>
-          <div className="p-3.5 bg-slate-900/70 border border-slate-800 rounded-xl">
-            <span className="font-bold text-indigo-400">Act 2: Shipment Lifecycle</span>
-            <p className="text-slate-400 mt-1">Shipper creates, Transporter accepts, dispatches, records milestones, and transfers custody.</p>
-          </div>
-          <div className="p-3.5 bg-slate-900/70 border border-slate-800 rounded-xl">
-            <span className="font-bold text-cyan-400">Act 3: Documents &amp; Escrow</span>
-            <p className="text-slate-400 mt-1">IPFS file upload, on-chain hash anchoring, verification, and escrow deposit/payout.</p>
-          </div>
-          <div className="p-3.5 bg-slate-900/70 border border-slate-800 rounded-xl">
-            <span className="font-bold text-emerald-400">Act 4: Audit &amp; Recovery</span>
-            <p className="text-slate-400 mt-1">Read-model PostgreSQL event audit trail and indexer rebuild verification.</p>
+
+          <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-sm flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono uppercase text-sky-400 font-semibold">ACT 06</span>
+              <h3 className="text-xs font-mono font-bold text-white mt-0.5">Disruption &amp; Dynamic Rerouting</h3>
+              <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                Simulate corridor failure (Mumbai/Mundra), run ML delay risk, calculate Yen detour, anchor on-chain.
+              </p>
+            </div>
+            <Link href="/disruption" className="text-[11px] font-mono text-sky-400 hover:underline mt-2 inline-flex items-center gap-1">
+              Launch Disruption Engine &rarr;
+            </Link>
           </div>
         </div>
       </section>

@@ -43,39 +43,44 @@ export function Navbar() {
   const isInspector = role === 5;
 
   const navLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: Layers, show: isAuthenticated },
-    { href: "/shipments", label: "Shipments", icon: Truck, show: isAuthenticated },
-    { href: "/shipments/new", label: "New Shipment", icon: PlusCircle, show: isShipper || isAdmin },
-    { href: "/disruption", label: "Disruption", icon: Route, show: isAdmin },
+    { href: "/dashboard", label: "Overview", icon: Layers, show: isAuthenticated },
+    { href: "/shipments", label: "Consignments", icon: Truck, show: isAuthenticated },
+    { href: "/shipments/new", label: "Dispatch", icon: PlusCircle, show: isShipper || isAdmin },
+    { href: "/disruption", label: "Disruption Engine", icon: Route, show: isAdmin },
     { href: "/disputes", label: "Disputes", icon: AlertTriangle, show: isAuthenticated },
-    { href: "/oracle", label: "Oracle", icon: Radio, show: isAdmin },
-    { href: "/participants", label: "Participants", icon: Users, show: isAdmin },
-    { href: "/audit", label: "Audit Log", icon: History, show: isAdmin || isInspector },
-    { href: "/analytics", label: "Analytics", icon: BarChart3, show: isAuthenticated },
-    { href: "/consensus", label: "Consensus", icon: Network, show: true },
+    { href: "/oracle", label: "Oracle Feed", icon: Radio, show: isAdmin },
+    { href: "/participants", label: "RBAC Registry", icon: Users, show: isAdmin },
+    { href: "/audit", label: "Ledger Audit", icon: History, show: isAdmin || isInspector },
+    { href: "/analytics", label: "Telemetry", icon: BarChart3, show: isAuthenticated },
+    { href: "/consensus", label: "Consensus Lab", icon: Network, show: true },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-13 flex items-center justify-between gap-4">
         {/* Brand */}
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <Boxes className="w-5 h-5" />
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-sm bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
+              <Boxes className="w-4 h-4 text-sky-400" />
             </div>
             <div>
-              <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
-                CargoChain
-              </span>
-              <span className="block text-[10px] uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400 -mt-1">
-                Logistics dApp
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm tracking-tight text-white uppercase font-mono">
+                  CargoChain
+                </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 bg-slate-800 border border-slate-700 text-slate-400 rounded-sm">
+                  OP-CONSOLE
+                </span>
+              </div>
+              <span className="block text-[10px] font-mono text-slate-400">
+                Phase 1 Resilience Platform
               </span>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5">
             {navLinks
               .filter((l) => l.show)
               .map((link) => {
@@ -85,13 +90,13 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono transition-colors rounded-sm ${
                       isActive
-                        ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800"
+                        ? "bg-slate-800 text-white font-semibold border-b-2 border-sky-500"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     {link.label}
                   </Link>
                 );
@@ -100,22 +105,22 @@ export function Navbar() {
         </div>
 
         {/* Network & Wallet Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {/* Network indicator */}
           {account && (
-            <div className="hidden sm:flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-800">
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-sm border border-slate-800 bg-slate-950">
               {isCorrectNetwork ? (
                 <>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-slate-700 dark:text-slate-300">Ganache (1337)</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="text-slate-300">GANACHE:1337</span>
                 </>
               ) : (
                 <button
                   onClick={switchNetwork}
-                  className="flex items-center gap-1 text-amber-600 dark:text-amber-400 hover:underline"
+                  className="flex items-center gap-1 text-amber-400 hover:underline"
                 >
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>Switch to 1337</span>
+                  <AlertTriangle className="w-3 h-3" />
+                  <span>SWITCH TO 1337</span>
                 </button>
               )}
             </div>
@@ -126,44 +131,42 @@ export function Navbar() {
             <button
               onClick={connectWallet}
               disabled={isConnecting}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow-blue-500/20 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs font-mono font-medium px-3 py-1.5 rounded-sm border border-slate-700 transition-colors disabled:opacity-50"
             >
-              <LogIn className="w-4 h-4" />
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
+              <LogIn className="w-3.5 h-3.5 text-sky-400" />
+              {isConnecting ? "CONNECTING..." : "CONNECT WALLET"}
             </button>
           ) : !isAuthenticated ? (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-500">{displayAddress}</span>
+              <span className="text-xs font-mono text-slate-400">{displayAddress}</span>
               <button
                 onClick={loginWithSignature}
                 disabled={isLoggingIn}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                className="flex items-center gap-1.5 bg-sky-950 hover:bg-sky-900 text-sky-200 border border-sky-800 text-xs font-mono px-3 py-1.5 rounded-sm transition-colors disabled:opacity-50"
               >
-                <Shield className="w-3.5 h-3.5" />
-                {isLoggingIn ? "Signing..." : "Sign to Login"}
+                <Shield className="w-3.5 h-3.5 text-sky-400" />
+                {isLoggingIn ? "VERIFYING..." : "EIP-191 SIGN"}
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               {/* Role Badge */}
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
-                {roleName}
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-mono font-bold uppercase tracking-wider bg-slate-800 text-sky-300 border border-slate-700">
+                ROLE: {roleName}
               </span>
 
               {/* Account Address */}
-              <div className="hidden lg:flex flex-col text-right">
-                <span className="text-xs font-mono font-medium text-slate-800 dark:text-slate-200">
-                  {displayAddress}
-                </span>
-              </div>
+              <span className="hidden sm:inline text-xs font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded-sm border border-slate-800">
+                {displayAddress}
+              </span>
 
               {/* Logout button */}
               <button
                 onClick={logout}
                 title="Disconnect & Logout"
-                className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-sm border border-transparent hover:border-slate-700 transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
