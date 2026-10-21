@@ -1,0 +1,157 @@
+{
+  "network_name": "CargoChain Indian Freight Corridors",
+  "data_provenance": "synthetic demo network",
+  "caveat": "Synthetic demo logistics network designed for academic simulation and dynamic rerouting demonstration. Illustrative only.",
+  "nodes": [
+    {
+      "id": "Indore",
+      "name": "Indore Central Logistics Hub",
+      "lat_deg": 22.7196,
+      "lon_deg": 75.8577,
+      "lat_micro": 22719600,
+      "lon_micro": 75857700,
+      "type": "InlandHub"
+    },
+    {
+      "id": "Mumbai/JNPT",
+      "name": "Jawaharlal Nehru Port Trust (JNPT) / Mumbai Port",
+      "lat_deg": 18.9500,
+      "lon_deg": 72.9500,
+      "lat_micro": 18950000,
+      "lon_micro": 72950000,
+      "type": "MajorPort"
+    },
+    {
+      "id": "Mundra",
+      "name": "Mundra Port Logistics Gateway",
+      "lat_deg": 22.8396,
+      "lon_deg": 69.7214,
+      "lat_micro": 22839600,
+      "lon_micro": 69721400,
+      "type": "MajorPort"
+    },
+    {
+      "id": "Ahmedabad",
+      "name": "Ahmedabad Multimodal Freight Terminal",
+      "lat_deg": 23.0225,
+      "lon_deg": 72.5714,
+      "lat_micro": 23022500,
+      "lon_micro": 72571400,
+      "type": "IndustrialHub"
+    },
+    {
+      "id": "Delhi",
+      "name": "Delhi National Capital Region Freight Center",
+      "lat_deg": 28.6139,
+      "lon_deg": 77.2090,
+      "lat_micro": 28613900,
+      "lon_micro": 77209000,
+      "type": "NorthernGateway"
+    },
+    {
+      "id": "Jaipur",
+      "name": "Jaipur Distribution Center",
+      "lat_deg": 26.9124,
+      "lon_deg": 75.7873,
+      "lat_micro": 26912400,
+      "lon_micro": 75787300,
+      "type": "RegionalHub"
+    },
+    {
+      "id": "Pune",
+      "name": "Pune Auto-Industrial Logistics Hub",
+      "lat_deg": 18.5204,
+      "lon_deg": 73.8567,
+      "lat_micro": 18520400,
+      "lon_micro": 73856700,
+      "type": "IndustrialHub"
+    },
+    {
+      "id": "Bengaluru",
+      "name": "Bengaluru Tech & Freight Corridor",
+      "lat_deg": 12.9716,
+      "lon_deg": 77.5946,
+      "lat_micro": 12971600,
+      "lon_micro": 77594600,
+      "type": "SouthernGateway"
+    },
+    {
+      "id": "Chennai",
+      "name": "Chennai Port & Logistics Cluster",
+      "lat_deg": 13.0827,
+      "lon_deg": 80.2707,
+      "lat_micro": 13082700,
+      "lon_micro": 80270700,
+      "type": "MajorPort"
+    },
+    {
+      "id": "Hyderabad",
+      "name": "Hyderabad Central Logistics Node",
+      "lat_deg": 17.3850,
+      "lon_deg": 78.4867,
+      "lat_micro": 17385000,
+      "lon_micro": 78486700,
+      "type": "CentralGateway"
+    },
+    {
+      "id": "Nagpur",
+      "name": "Nagpur Multi-Modal Zero Mile Hub",
+      "lat_deg": 21.1458,
+      "lon_deg": 79.0882,
+      "lat_micro": 21145800,
+      "lon_micro": 79088200,
+      "type": "CentralGateway"
+    },
+    {
+      "id": "Kolkata",
+      "name": "Kolkata Eastern Port & Logistics Terminal",
+      "lat_deg": 22.5726,
+      "lon_deg": 88.3639,
+      "lat_micro": 22572600,
+      "lon_micro": 88363900,
+      "type": "MajorPort"
+    }
+  ],
+  "edges": [
+    { "from": "Indore", "to": "Mumbai/JNPT", "distance_km": 580.0, "base_hours": 10.5, "mode": "Road", "historical_delay": 0.12 },
+    { "from": "Mumbai/JNPT", "to": "Indore", "distance_km": 580.0, "base_hours": 10.5, "mode": "Road", "historical_delay": 0.12 },
+    { "from": "Indore", "to": "Ahmedabad", "distance_km": 390.0, "base_hours": 7.0, "mode": "Road", "historical_delay": 0.08 },
+    { "from": "Ahmedabad", "to": "Indore", "distance_km": 390.0, "base_hours": 7.0, "mode": "Road", "historical_delay": 0.08 },
+    { "from": "Indore", "to": "Pune", "distance_km": 590.0, "base_hours": 11.0, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Pune", "to": "Indore", "distance_km": 590.0, "base_hours": 11.0, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Indore", "to": "Nagpur", "distance_km": 450.0, "base_hours": 8.0, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Nagpur", "to": "Indore", "distance_km": 450.0, "base_hours": 8.0, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Indore", "to": "Jaipur", "distance_km": 580.0, "base_hours": 10.0, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Jaipur", "to": "Indore", "distance_km": 580.0, "base_hours": 10.0, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Mumbai/JNPT", "to": "Pune", "distance_km": 150.0, "base_hours": 3.0, "mode": "Road", "historical_delay": 0.15 },
+    { "from": "Pune", "to": "Mumbai/JNPT", "distance_km": 150.0, "base_hours": 3.0, "mode": "Road", "historical_delay": 0.15 },
+    { "from": "Mumbai/JNPT", "to": "Ahmedabad", "distance_km": 525.0, "base_hours": 9.0, "mode": "Road", "historical_delay": 0.14 },
+    { "from": "Ahmedabad", "to": "Mumbai/JNPT", "distance_km": 525.0, "base_hours": 9.0, "mode": "Road", "historical_delay": 0.14 },
+    { "from": "Mundra", "to": "Ahmedabad", "distance_km": 350.0, "base_hours": 6.5, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Ahmedabad", "to": "Mundra", "distance_km": 350.0, "base_hours": 6.5, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Ahmedabad", "to": "Jaipur", "distance_km": 660.0, "base_hours": 11.5, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Jaipur", "to": "Ahmedabad", "distance_km": 660.0, "base_hours": 11.5, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Jaipur", "to": "Delhi", "distance_km": 280.0, "base_hours": 5.0, "mode": "Road", "historical_delay": 0.16 },
+    { "from": "Delhi", "to": "Jaipur", "distance_km": 280.0, "base_hours": 5.0, "mode": "Road", "historical_delay": 0.16 },
+    { "from": "Delhi", "to": "Nagpur", "distance_km": 1080.0, "base_hours": 17.0, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Nagpur", "to": "Delhi", "distance_km": 1080.0, "base_hours": 17.0, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Delhi", "to": "Kolkata", "distance_km": 1500.0, "base_hours": 24.0, "mode": "Road", "historical_delay": 0.18 },
+    { "from": "Kolkata", "to": "Delhi", "distance_km": 1500.0, "base_hours": 24.0, "mode": "Road", "historical_delay": 0.18 },
+    { "from": "Pune", "to": "Bengaluru", "distance_km": 840.0, "base_hours": 13.5, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Bengaluru", "to": "Pune", "distance_km": 840.0, "base_hours": 13.5, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Pune", "to": "Hyderabad", "distance_km": 560.0, "base_hours": 9.5, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Hyderabad", "to": "Pune", "distance_km": 560.0, "base_hours": 9.5, "mode": "Road", "historical_delay": 0.10 },
+    { "from": "Bengaluru", "to": "Chennai", "distance_km": 350.0, "base_hours": 6.0, "mode": "Road", "historical_delay": 0.13 },
+    { "from": "Chennai", "to": "Bengaluru", "distance_km": 350.0, "base_hours": 6.0, "mode": "Road", "historical_delay": 0.13 },
+    { "from": "Bengaluru", "to": "Hyderabad", "distance_km": 570.0, "base_hours": 9.0, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Hyderabad", "to": "Bengaluru", "distance_km": 570.0, "base_hours": 9.0, "mode": "Road", "historical_delay": 0.09 },
+    { "from": "Hyderabad", "to": "Chennai", "distance_km": 630.0, "base_hours": 10.5, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Chennai", "to": "Hyderabad", "distance_km": 630.0, "base_hours": 10.5, "mode": "Road", "historical_delay": 0.11 },
+    { "from": "Hyderabad", "to": "Nagpur", "distance_km": 500.0, "base_hours": 8.5, "mode": "Road", "historical_delay": 0.08 },
+    { "from": "Nagpur", "to": "Hyderabad", "distance_km": 500.0, "base_hours": 8.5, "mode": "Road", "historical_delay": 0.08 },
+    { "from": "Nagpur", "to": "Kolkata", "distance_km": 1100.0, "base_hours": 18.0, "mode": "Road", "historical_delay": 0.14 },
+    { "from": "Kolkata", "to": "Nagpur", "distance_km": 1100.0, "base_hours": 18.0, "mode": "Road", "historical_delay": 0.14 },
+    { "from": "Chennai", "to": "Kolkata", "distance_km": 1650.0, "base_hours": 26.0, "mode": "Road", "historical_delay": 0.15 },
+    { "from": "Kolkata", "to": "Chennai", "distance_km": 1650.0, "base_hours": 26.0, "mode": "Road", "historical_delay": 0.15 }
+  ]
+}
