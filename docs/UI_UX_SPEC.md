@@ -32,6 +32,7 @@ Provide a clear local demonstration of role-controlled shipment management, tran
 | `/simulator` | Authenticated (ADV) | Model setup, run, compare and visualize |
 | `/analytics` | Authenticated | MVP summary; advanced charts when implemented |
 | `/security-lab` | Authenticated (ADV) | Controlled attack and authorization demonstrations |
+| `/disruption` | Admin (Phase 1) | Hazard severity simulation, Dijkstra/Yen reroute comparison, ML delay assessment, and on-chain Oracle anchoring |
 
 ## 4. Role-aware behavior
 

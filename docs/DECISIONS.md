@@ -16,6 +16,7 @@ Architecture and scope decisions. New decisions must include date, context, deci
 | DEC-010 | PoW, PoA and PBFT-lite are initial simulator scope; PoS/PoET documented, optional to simulate | Covers syllabus concepts without overloading MVP | Accepted |
 | DEC-011 | Contract, API, UI, simulator and ML tests remain in their respective layers | Prevents mismatched test ownership and unclear evidence | Accepted |
 | DEC-012 | MVP contracts are non-upgradeable; redeploy/migration is the demo upgrade path | Keeps contract design explainable; proxy pattern is future work | Accepted |
+| DEC-013 | Phase 1 Disruption & Rerouting Module: Pluggable DijkstraEngine with Yen's K-paths and Oracle Anchoring | Implements additive disruption simulation, ML advisory delay risk, and on-chain oracle anchoring without contract ABI modifications or redeployment | Accepted |
 
 ## Change proposal template
 

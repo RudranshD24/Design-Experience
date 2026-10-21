@@ -50,6 +50,23 @@ Use only after the MVP gate is passed. Replace example identifiers with actual s
 
 Demonstrate oracle scenarios and label them as reports; disputes and controlled security cases; consensus simulator with identical seed/workload; advanced analytics; optional ML with synthetic-data caveat. Do not present unimplemented screens or mock metrics as live functionality.
 
+## Act 6 — Disruption detection and dynamic rerouting (advanced, synthetic)
+
+Demonstrate Phase 1 of the Smart Supply Chain Resilience Platform.
+
+1. Connect as Admin (`0x90F79bf6EB2c4f870365E785982E1f101E93b906`) and navigate to the **Disruption** console (`/disruption`).
+2. Select an active `InTransit` shipment (e.g. Shipment #1 Indore -> Mumbai or Shipment #2 Ahmedabad -> Delhi from `seed_demo_shipments.js`).
+3. Click the preset **"Storm at Mumbai/JNPT (severity 0.85)"**. Notice the inputs auto-populate: Disrupted Node = `Mumbai/JNPT`, Severity = `0.85`.
+4. Click **"Simulate & Evaluate Disruption"**.
+5. Inspect the advisory evaluation:
+   - **ML Delay Risk:** Category `HIGH` (~74.6% delay risk probability) with contributing factors (`weather_risk_index`, `traffic_congestion_index`).
+   - **Corridor Rerouting:** Baseline route (`Indore -> Mumbai/JNPT`, 585 km, 11.7h) vs Rerouted route avoiding Mumbai (`Indore -> Pune -> Mumbai/JNPT`, 795 km, 15.9h, delta +4.2h) with K=3 simple path alternatives.
+   - **On-Chain Audit Trail:** Because risk is `HIGH` and shipment is `InTransit`, `OracleService.submit_delay` marks the shipment `Delayed` on-chain, followed by `OracleService.submit_oracle_update` recording the reroute decision hash/metadataURI.
+6. Click the displayed transaction hashes and the link to `/shipments/1` to view the newly anchored oracle milestone and delayed status in the timeline.
+7. Click the preset **"Port congestion at Mundra (severity 0.60)"** to demonstrate moderate disruption and fallback handling (`onchain: skipped` when below threshold, or `onchain: unavailable` if chain/oracle is offline).
+8. Highlight the visible warning badge: *"Synthetic demo network & features — advisory only"*.
+
 ## Close
 
 Summarize implemented versus simulated versus future work, known limitations, and the course concepts demonstrated. Do not claim real-world deployment, real GPS validation, confidential storage or real payments.
+

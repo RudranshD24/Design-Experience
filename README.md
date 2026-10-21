@@ -10,10 +10,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > **Academic Project**  
-> **Course:** Blockchain Technology (`702IT0E016`)  
-> **Author / Owner:** Rudransh (`RudranshD24`)  
+> **Course:** Blockchain Technology (`702IT0E016`) & Design Experience  
+> **Author / Owner:** Rudransh Dubey (`RudranshD24`, B.Tech AI & DS, NMIMS Indore)  
 > **Repository:** [https://github.com/RudranshD24/CargoChain](https://github.com/RudranshD24/CargoChain)  
 > **Network:** Ganache Local RPC (`http://127.0.0.1:8545`, Chain ID: `1337`)  
+
+### Design Experience Framing (Phase 1)
+
+CargoChain serves as **Phase 1: Trust, Visibility, and ML-Advisory Foundation** of the multi-semester *Smart Supply Chain Resilience Platform: proactive disruption detection + dynamic rerouting, with a blockchain audit trail*, developed as a solo project by **Rudransh Dubey** (B.Tech AI & DS, NMIMS Indore).
+
+**Phase 1 Capabilities:**
+- **Verified Smart Contract Backbone:** Explicit 10-stage lifecycle, conditional test-ETH escrow settlement, and SHA-256 IPFS document anchoring.
+- **Dynamic Routing Engine:** Pluggable `DijkstraEngine` with Yen's K-Shortest Loopless Paths (K=3) over a 12-node Indian freight corridor network.
+- **Disruption Simulation & Oracle Anchoring:** Automatic on-chain transition to `Delayed` and `OracleUpdateRecorded` milestone anchoring when severe weather/congestion strikes.
+- **Admin Disruption Management Console:** Web3 interface with one-click presets, inline SVG corridor comparisons, and alternate path metrics.
+
+*See [`docs/DESIGN_EXPERIENCE.md`](docs/DESIGN_EXPERIENCE.md) for full architectural details, real vs. simulated matrix, and semester-by-semester roadmap.*
 
 ---
 

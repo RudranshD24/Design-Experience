@@ -61,6 +61,8 @@ Base URL: `http://localhost:8000/api/v1`. JSON unless stated. FastAPI publishes 
 | ADV | GET | `/analytics/timeseries` | Authenticated | Delivery/transit time series |
 | ADV | POST | `/ml/predict` | Authenticated | Optional shipment delay prediction |
 | ADV | GET | `/ml/model-info` | Authenticated | Optional model metadata |
+| ADV | POST | `/disruption/simulate` | Admin | Simulate disruption, compute Dijkstra/Yen reroute, evaluate ML delay risk, anchor on-chain |
+| ADV | GET | `/disruption/history` | Admin | Retrieve recent disruption simulations and reroute decisions |
 
 ## 4. Representative response schemas
 

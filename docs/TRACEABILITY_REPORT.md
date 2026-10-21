@@ -18,6 +18,13 @@ This is the working map from requirements to implementation areas and evidence. 
 | FR-ORC-01..03 | Oracle service and TrackingManager | Hardhat (6 passed) + pytest (7 oracle passed) + indexer tests | Verified |
 | FR-DSP-01 | DisputeManager, API and UI | Hardhat (13 passed) + pytest (6 passed) + Next.js UI | Verified |
 | FR-ESC-05..07 | EscrowManager | Freeze, penalty and rule tests (13 passed) | Verified |
+| FR-RER-01 | Logistics Network Data | `backend/data/demo_network.json` (12 hubs, 40 corridors) | Verified |
+| FR-RER-02 | Routing Engine & Yen's K-Paths | `backend/app/services/routing.py` + pytest (10 passed) | Verified |
+| FR-RER-03 | Disruption Simulation API | `backend/app/routers/disruption.py` + pytest (8 passed) | Verified |
+| FR-RER-04 | Oracle On-Chain Anchoring | `oracle/service.py` + mocked/live test coverage | Verified |
+| FR-RER-05 | ML Monotonicity & Provenance | `backend/tests/test_ml_monotonicity.py` (5 passed) | Verified |
+| FR-RER-06 | Admin Disruption Console UI | `frontend/src/app/disruption/page.tsx` + Jest (3 passed) | Verified |
+| FR-RER-07 | Demo Seeding & Preflight Check | `seed_demo_shipments.js` + `scripts/preflight_demo.py` | Verified |
 | FR-CON-01..04 | `simulator/` | Seeded simulator unit tests | Not started |
 | FR-CON-05 | Documentation / viva | Course-topic review | Not started |
 | FR-SEC-01..02 | Security lab and contracts | Negative tests and isolated attack tests | Not started |

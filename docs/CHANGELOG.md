@@ -2,6 +2,41 @@
 
 All notable specification and project changes are recorded here. Dates use ISO `YYYY-MM-DD`. This log does not imply implementation completion.
 
+## [1.9] — 2026-10-21
+
+### Phase 1 — Smart Supply Chain Resilience Platform (Design Experience)
+- Dynamic Routing Service & Graph Algorithm (`backend/app/services/routing.py`, `backend/data/demo_network.json`):
+  - Created pluggable `RoutingEngine` interface and reference `DijkstraEngine` using Python standard library (`heapq`).
+  - Implemented dynamic risk-adjusted edge weighting: $W = \text{base\_hours} \times (1 + 0.8 \cdot \text{weather} + 0.6 \cdot \text{congestion} + 0.4 \cdot \text{historical\_delay})$.
+  - Implemented Yen's K-Shortest Loopless Simple Paths ($K=3$) for discovering alternate corridors.
+  - Handled network edge cases: origin == destination, destination disrupted (nearest alternative hub recommendation), evacuation route with penalized exit edges if current node is disrupted, and no-path handling.
+  - Added timing benchmark helper logging local query latency (<0.05ms on demo graph).
+  - Created synthetic 12-node Indian freight corridor topology (`backend/data/demo_network.json`) covering Indore, Mumbai/JNPT, Mundra, Ahmedabad, Delhi, Jaipur, Pune, Bengaluru, Chennai, Hyderabad, Nagpur, and Kolkata.
+  - Added test suite `backend/tests/test_routing.py` (10 passing tests including brute-force subgraph comparison).
+- Disruption Simulation & Oracle Anchoring API (`backend/app/routers/disruption.py`):
+  - Created Admin-only router mounted under `/api/v1/disruption/`.
+  - Implemented `POST /api/v1/disruption/simulate`: deterministic severity mapping to weather/congestion indices, calls advisory ML delay predictor, computes baseline vs rerouted paths, and conditionally invokes on-chain `OracleService.submit_delay` and `submit_oracle_update` with metadata URI when shipment is `InTransit` and risk is `HIGH`.
+  - Implemented `GET /api/v1/disruption/history`: retrieves recent simulation decisions from bounded in-memory buffer and indexed events.
+  - Added test suite `backend/tests/test_disruption_api.py` (8 passing tests covering auth, onchain anchoring, skipped, and failure handling).
+- ML Advisory Sanity & Monotonicity Verification (`backend/tests/test_ml_monotonicity.py`):
+  - Verified non-decreasing delay risk probability trends as weather and traffic indices increase within empirical tree tolerance.
+  - Verified that disruption severity $\ge 0.70$ reliably produces `HIGH` delay risk category on demo shipments.
+  - Labeled all ML components with explicit "trained on synthetic data — illustrative only" provenance notices.
+  - Added test suite `backend/tests/test_ml_monotonicity.py` (5 passing tests).
+- Frontend Admin Disruption Console (`frontend/src/app/disruption/page.tsx`):
+  - Created responsive Admin Disruption Management Console with shipment selector, node overrides, hazard severity slider, and one-click presets ("Storm at Mumbai/JNPT", "Port Congestion at Mundra").
+  - Implemented inline SVG node-chain corridor visualizer highlighting disrupted hubs in red and bypass corridors in emerald.
+  - Displayed delta hours, K-shortest alternate paths, transaction hashes, and on-chain anchoring status.
+  - Added "Disruption" link to navigation header (`Navbar.tsx`) and hero tagline to dashboard (`page.tsx`).
+  - Added typed client methods to `api.ts` and test suite `frontend/tests/disruption.test.ts` (3 passing tests; total 30 passing frontend tests).
+  - Verified production build: 15/15 static and dynamic pages compiled with 0 errors.
+- Demo Seeding & Preflight Check Scripts:
+  - Created `contracts/scripts/seed_demo_shipments.js` for creating 3 Indian corridor demo consignments, depositing escrow, accepting, and dispatching to `InTransit`.
+  - Created `scripts/preflight_demo.py` providing read-only PASS/FAIL verification across Ganache 1337, bytecode, database, IPFS, oracle role, shipments, ML, and network topology.
+- Documentation:
+  - Created comprehensive `docs/DESIGN_EXPERIENCE.md` framing Phase 1, multi-semester roadmap, real vs simulated matrix, and evaluator Q&A.
+  - Updated `README.md`, `DECISIONS.md` (DEC-013), `API_SPEC.md`, `UI_UX_SPEC.md`, `DEMO_SCRIPT.md`, and `TRACEABILITY_REPORT.md`.
+
 ## [1.8] — 2026-10-04
 
 ### P6 — Security Hardening, Advanced Analytics & Production-Readiness Assessment
