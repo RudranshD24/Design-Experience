@@ -35,6 +35,7 @@ from app.routers import (
     oracle,
     consensus,
     ml,
+    disruption,
 )
 
 
@@ -189,4 +190,5 @@ app.include_router(disputes.router, prefix="/api/v1")
 app.include_router(oracle.router, prefix="/api/v1")
 app.include_router(consensus.router, prefix="/api/v1")
 app.include_router(ml.router, prefix="/api/v1")
+app.include_router(disruption.router, prefix="/api/v1")
 
