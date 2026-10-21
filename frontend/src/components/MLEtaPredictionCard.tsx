@@ -81,7 +81,7 @@ export function MLEtaPredictionCard({ shipmentId }: MLEtaPredictionCardProps) {
               </span>
             </div>
             <p className="text-[11px] text-slate-400">
-              Predictive transit modeling based on historical lane friction and environmental indices.
+              Predictive transit modeling based on historical lane friction and environmental indices. Trained on synthetic data — illustrative only.
             </p>
           </div>
         </div>
