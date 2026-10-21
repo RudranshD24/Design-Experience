@@ -66,9 +66,14 @@ def test_login_invalid_signature(client, wallets):
     assert login_resp.json()["error"]["code"] == "UNAUTHENTICATED"
 
 
-def test_login_replay_nonce_fails(client, wallets):
+def test_login_replay_nonce_fails(client, wallets, db_session):
     account = wallets["shipper"]
     addr = account.address
+
+    # Pre-register user in DB as active
+    user = User(wallet_address=addr.lower(), role=2, is_active=True)
+    db_session.add(user)
+    db_session.commit()
 
     nonce_resp = client.post("/api/v1/auth/nonce", json={"address": addr})
     msg = nonce_resp.json()["message"]
